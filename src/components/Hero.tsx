@@ -1,25 +1,59 @@
-export default function Hero() {
+"use client";
+
+interface HeroProps {
+  preheading?: string;
+  headline?: string;
+  headlineAccent?: string;
+  subheadline?: string;
+  ctaLabel?: string;
+}
+
+export default function Hero({
+  preheading = "[PLACEHOLDER]",
+  headline = "[PLACEHOLDER]",
+  headlineAccent = "[PLACEHOLDER]",
+  subheadline = "[PLACEHOLDER]",
+  ctaLabel = "[PLACEHOLDER]",
+}: HeroProps) {
   return (
     <section
       id="hero"
-      className="min-h-[800px] min-h-screen flex items-center justify-center pt-12"
+      className="relative min-h-screen flex items-center justify-center overflow-hidden"
     >
-      <div className="mx-auto max-w-[1120px] px-5 md:px-10 py-[120px_20px] md:py-[120px_40px] flex flex-col items-center text-center gap-8 md:gap-16">
+      {/* Video Background */}
+      <div className="absolute inset-0 z-0">
+        <video
+          autoPlay
+          muted
+          loop
+          playsInline
+          className="absolute inset-0 w-full h-full object-cover"
+        >
+          <source
+            src="https://videos.pexels.com/video-files/3129671/3129671-uhd_2560_1440_30fps.mp4"
+            type="video/mp4"
+          />
+        </video>
+        <div className="absolute inset-0 bg-black/50" />
+      </div>
+
+      {/* Content */}
+      <div className="relative z-[1] mx-auto max-w-[1120px] px-5 md:px-10 py-[120px_20px] md:py-[120px_40px] flex flex-col items-center text-center gap-8 md:gap-16">
         {/* Preheading */}
-        <span className="text-sm md:text-base text-gray-dark tracking-wide uppercase">
-          [PLACEHOLDER]
+        <span className="text-sm md:text-base text-white/70 tracking-wide uppercase">
+          {preheading}
         </span>
 
         {/* H1 */}
-        <h1 className="font-[family-name:var(--font-manrope)] text-[24px] md:text-[54px] lg:text-[72px] font-bold leading-[1.2em] tracking-tight text-black max-w-3xl">
-          [PLACEHOLDER]
+        <h1 className="font-[family-name:var(--font-manrope)] text-[24px] md:text-[54px] lg:text-[72px] font-bold leading-[1.2em] tracking-tight text-white max-w-3xl">
+          {headline}
           <br />
-          <span className="text-accent">[PLACEHOLDER]</span>
+          <span className="text-accent">{headlineAccent}</span>
         </h1>
 
         {/* Paragraph */}
-        <p className="text-base md:text-[20px] text-gray-dark leading-[1.5em] max-w-[544px]">
-          [PLACEHOLDER]
+        <p className="text-base md:text-[20px] text-white/70 leading-[1.5em] max-w-[544px]">
+          {subheadline}
         </p>
 
         {/* CTA Button */}
@@ -27,7 +61,7 @@ export default function Hero() {
           href="#contact"
           className="inline-flex items-center gap-4 h-10 md:h-12 px-5 md:px-6 rounded-3xl bg-accent text-white text-sm font-medium hover:bg-accent-hover transition-colors"
         >
-          [PLACEHOLDER]
+          {ctaLabel}
           <svg
             width="16"
             height="16"
