@@ -537,49 +537,6 @@ footer p, footer a, footer span { color: white !important; --framer-text-color: 
     padding: 0 0;
 }
 .custom-faq-answer.open {
-    max-height: 300px;
-    opacity: 1;
-    padding: 10px 0 20px 0;
-}
-.framer-2k822i {
-    cursor: pointer;
-}
-</style>
-<script>
-document.addEventListener("DOMContentLoaded", () => {
-    const answers = [
-        "It is a systems-biology approach that focuses on identifying and addressing the root cause of disease, rather than just suppressing symptoms.",
-        "We are out-of-network with all insurance providers to ensure we can spend adequate time with you without restrictions, but we can provide a superbill for you to submit.",
-        "Most patients notice improvements within the first 4-6 weeks, though full protocols for chronic issues typically take 3-6 months.",
-        "No, lab costs are separate. We use specialized functional testing that goes beyond standard bloodwork, and costs vary based on what your body needs.",
-        "We can, but our goal is to use targeted supplementation, lifestyle changes, and nutrition first. Medication is used only when strictly necessary."
-    ];
-
-    const topParts = document.querySelectorAll('.framer-2k822i[data-framer-name="Top Part"]');
-    topParts.forEach((topPart, index) => {
-        // Append answer div
-        const answerDiv = document.createElement('div');
-        answerDiv.className = 'custom-faq-answer';
-        answerDiv.innerText = answers[index] || "Please contact us for more information.";
-        topPart.parentNode.appendChild(answerDiv);
-
-        // Add click listener
-        topPart.addEventListener('click', () => {
-            const isOpen = answerDiv.classList.contains('open');
-            // close all
-            document.querySelectorAll('.custom-faq-answer').forEach(ans => ans.classList.remove('open'));
-            document.querySelectorAll('.framer-dombwf').forEach(line => line.style.transform = 'rotate(90deg)'); // reset plus
-
-            if (!isOpen) {
-                answerDiv.classList.add('open');
-                // rotate plus icon to minus
-                const vLine = topPart.querySelector('.framer-dombwf');
-                if (vLine) vLine.style.transform = 'rotate(0deg)';
-            }
-        });
-    });
-});
-</script>
 
 
 <script>
@@ -789,45 +746,85 @@ document.addEventListener('DOMContentLoaded', () => {
 
 <style>
 .custom-faq-answer {
-    max-height: 0; overflow: hidden; transition: max-height 0.3s ease-out, padding 0.3s ease-out, opacity 0.3s ease-out;
-    opacity: 0; color: #555; font-size: 16px; line-height: 1.5em; padding: 0 0;
+    max-height: 0;
+    overflow: hidden;
+    transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+    opacity: 0;
+    padding: 0 24px;
+    font-family: 'Inter', sans-serif;
+    font-size: 16px;
+    line-height: 1.6;
+    color: #555;
+    background: #fdfdfd;
 }
-.custom-faq-answer.open { max-height: 300px; opacity: 1; padding: 10px 0 20px 0; }
+.custom-faq-answer.open {
+    max-height: 500px;
+    opacity: 1;
+    padding: 16px 24px 32px;
+    border-bottom: 1px solid #eee;
+}
+.custom-faq-answer a {
+    color: rgb(122, 158, 126);
+    text-decoration: underline;
+    font-weight: 500;
+}
 </style>
 <script id='faq-update-logic'>
 (function() {
     const questions = [
-        "What is functional medicine?", "Do you accept insurance?", "How long until I see results?", "Are labs included?", "Do you prescribe medication?"
+        "What is functional medicine?", 
+        "Do you accept insurance?", 
+        "How long until I see results?", 
+        "Are labs included?", 
+        "Do you prescribe medication?"
     ];
     const answers = [
         "Think of it as medicine that finally asks why — not just what. Instead of managing symptoms with a prescription, we dig into the root cause of what's going on in your body and build a plan to actually fix it.",
         "We don't — and it's intentional. The insurance model is built around sick care, not restoring your health. Operating outside of it means no time limits, no restrictions, and no compromises on the level of care you receive. We can provide a superbill if you'd like to submit for potential reimbursement.",
         "Most people notice real changes within the first few weeks. Full resolution of chronic issues typically takes 3–6 months — but you won't be waiting long to feel the difference.",
-        "Labs are covered as part of your Initial Wellness Review. Not sure if our approach is right for you? <a href='#booking' style='color:#7a9e7e; text-decoration:underline;'>Book a free clarity call here.</a>",
-        "Functional medicine focuses on giving your body exactly what it needs to heal — naturally. No revolving door of GP appointments, no scripts that mask the problem. We work with nutrition, targeted supplementation, and lifestyle first. <a href='#booking' style='color:#7a9e7e; text-decoration:underline;'>Book a free call to see if our approach is right for you.</a>"
+        "Labs are covered as part of your Initial Wellness Review. Not sure if our approach is right for you? <a href='#booking' style='color:rgb(122, 158, 126); text-decoration:underline;'>Book a free clarity call here.</a>",
+        "Functional medicine focuses on giving your body exactly what it needs to heal — naturally. No revolving door of GP appointments, no scripts that mask the problem. We work with nutrition, targeted supplementation, and lifestyle first. <a href='#booking' style='color:rgb(122, 158, 126); text-decoration:underline;'>Book a free call to see if our approach is right for you.</a>"
     ];
+
     function initializeFAQs() {
-        const allTopParts = document.querySelectorAll('[data-framer-name="Top Part"]');
-        allTopParts.forEach((part, i) => {
+        const faqSection = [...document.querySelectorAll('section')].find(s => 
+            s.innerText && (s.innerText.includes('FAQ') || s.innerText.includes('Functional medicine focuses'))
+        );
+        if (!faqSection) return;
+
+        const topParts = faqSection.querySelectorAll('[data-framer-name="Top Part"]');
+        topParts.forEach((part, i) => {
             if (part.dataset.faqInited) return;
             part.dataset.faqInited = 'true';
+            
             const p = part.querySelector('p');
             if (p) p.innerText = questions[i % questions.length];
+            
             let ans = document.createElement('div');
             ans.className = 'custom-faq-answer';
             ans.innerHTML = answers[i % answers.length];
             part.parentNode.insertBefore(ans, part.nextSibling);
+            
             const toggle = (e) => {
                 if (e) { e.preventDefault(); e.stopPropagation(); }
                 const isOpened = ans.classList.contains('open');
-                part.parentNode.querySelectorAll('.custom-faq-answer').forEach(a => a.classList.remove('open'));
-                part.parentNode.querySelectorAll('.framer-dombwf').forEach(l => l.style.transform = 'rotate(90deg)');
-                if (!isOpened) { ans.classList.add('open'); const vLine = part.querySelector('.framer-dombwf'); if (vLine) vLine.style.transform = 'rotate(0deg)'; }
+                
+                faqSection.querySelectorAll('.custom-faq-answer').forEach(a => a.classList.remove('open'));
+                faqSection.querySelectorAll('.framer-dombwf').forEach(l => l.style.transform = 'rotate(90deg)');
+                
+                if (!isOpened) {
+                    ans.classList.add('open');
+                    const vLine = part.querySelector('.framer-dombwf');
+                    if (vLine) vLine.style.transform = 'rotate(0deg)';
+                }
             };
-            part.onclick = toggle; part.ontouchend = toggle;
+            part.style.cursor = 'pointer';
+            part.onclick = toggle;
+            part.ontouchend = toggle;
         });
     }
-    initializeFAQs(); setInterval(initializeFAQs, 1500);
+    initializeFAQs();
+    setInterval(initializeFAQs, 1500);
 })();
 </script>
 
