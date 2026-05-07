@@ -143,6 +143,113 @@ html body { background: var(--token-28d21c18-0fa7-4a39-8727-636fc79ae338, rgb(25
     border-top: 2px solid #e1e1e1 !important;
 }
 </style>
+
+
+
+<style id='mobile-grid-fix'>
+@media (max-width: 809.98px) {
+    /* Hide the duplicated variants */
+    .framer-s26z5y > *:nth-child(2),
+    .framer-s26z5y > *:nth-child(4) {
+        display: none !important;
+    }
+    
+    /* Clean 2x2 grid */
+    .framer-s26z5y {
+        display: grid !important;
+        grid-template-columns: repeat(2, 1fr) !important;
+        gap: 24px 32px !important;
+        padding: 20px 0 !important;
+    }
+
+    /* Standardized Spacing & Borders */
+    .framer-jtKa7 {
+        border-top: 2px solid #e1e1e1 !important;
+        padding-top: 16px !important;
+        display: flex !important;
+        flex-direction: column !important;
+        gap: 8px !important;
+        text-align: left !important;
+        height: auto !important;
+    }
+
+    /* Equal Font Sizes for Numbers */
+    .framer-jtKa7 span {
+        font-family: 'Manrope', sans-serif !important;
+        font-size: 44px !important;
+        line-height: 44px !important;
+        font-weight: 500 !important;
+        color: #000 !important;
+        opacity: 1 !important;
+    }
+
+    /* Equal Font Sizes for Labels */
+    .framer-jtKa7 p {
+        font-family: 'Inter', sans-serif !important;
+        font-size: 15px !important;
+        line-height: 1.4em !important;
+        font-weight: 400 !important;
+        color: #000 !important;
+        margin: 0 !important;
+    }
+}
+</style>
+
+
+
+
+
+
+
+
+
+
+<style id='mobile-visual-fixes'>
+@keyframes mobile-marquee {
+    0% { transform: translateX(0); }
+    100% { transform: translateX(-50%); }
+}
+
+@media (max-width: 809.98px) {
+    .framer-oddlcj { padding-top: 50px !important; }
+    .framer-kd8jde-container { top: 16px !important; }
+
+    .framer-95qcoa {
+        display: flex !important;
+        flex-direction: row !important;
+        flex-wrap: nowrap !important;
+        width: max-content !important;
+        animation: mobile-marquee 40s linear infinite !important;
+        gap: 32px !important;
+        padding: 40px 0 !important;
+        pointer-events: all !important;
+    }
+    
+    /* Interactive logic: Pause on touch/active */
+    .framer-95qcoa:active,
+    .framer-95qcoa.paused {
+        animation-play-state: paused !important;
+    }
+    
+    .framer-1grwh1j {
+        overflow: hidden !important;
+        width: 100% !important;
+    }
+
+    .framer-1ifa1g {
+        flex: 0 0 300px !important;
+        width: 300px !important;
+        pointer-events: all !important; /* Ensure content is clickable */
+    }
+}
+</style>
+
+
+
+
+
+
+
 </head>
 <body>
 
@@ -545,6 +652,123 @@ document.addEventListener('DOMContentLoaded', () => {
     setTimeout(fix, 1000);
     setTimeout(fix, 3000);
 });
+</script>
+
+
+<script id='mobile-trust-logic'>
+(function() {
+    const labels = {
+        'Years of Experience': '14+',
+        'Practitioners': '5',
+        'Members Helped': '1000+',
+        '120+ Google Reviews': '4.9★'
+    };
+
+    function stabilizeTrust() {
+        document.querySelectorAll('p').forEach(p => {
+            const text = p.innerText.trim();
+            for (const [key, val] of Object.entries(labels)) {
+                if (text.includes(key)) {
+                    const container = p.closest('.framer-jtKa7');
+                    if (container) {
+                        const span = container.querySelector('span');
+                        if (span) {
+                            span.innerText = val;
+                            span.style.opacity = '1';
+                        }
+                    }
+                }
+            }
+        });
+    }
+    stabilizeTrust();
+    setInterval(stabilizeTrust, 1000);
+})();
+</script>
+
+
+
+
+
+
+
+
+
+<script id='mobile-carousel-logic'>
+(function() {
+    function setupMobileMarquee() {
+        if (window.innerWidth > 810) return;
+        const container = document.querySelector('.framer-95qcoa');
+        if (!container) return;
+
+        // Clone for loop
+        const items = Array.from(container.querySelectorAll('.framer-1ifa1g'));
+        if (items.length > 0 && items.length < 16) {
+            items.forEach(item => container.appendChild(item.cloneNode(true)));
+        }
+
+        // Logic to allow interaction to "override" animation
+        // We use a small delay to distinguish between tap and hold
+        let touchTimer;
+        container.addEventListener('touchstart', () => {
+            touchTimer = setTimeout(() => container.classList.add('paused'), 100);
+        }, {passive: true});
+        
+        container.addEventListener('touchend', () => {
+            clearTimeout(touchTimer);
+            container.classList.remove('paused');
+        }, {passive: true});
+
+        container.addEventListener('mousedown', () => container.classList.add('paused'));
+        container.addEventListener('mouseup', () => container.classList.remove('paused'));
+    }
+    
+    window.addEventListener('load', setupMobileMarquee);
+    setTimeout(setupMobileMarquee, 2000);
+})();
+</script>
+
+
+
+
+
+
+
+
+
+
+<script id='cta-link-logic'>
+(function() {
+    function linkCTAs() {
+        const bookingSection = document.getElementById('booking');
+        if (!bookingSection) return;
+
+        // Expanded keyword list for all CTAs pointing to the calendar
+        const keywords = ['call', 'clarity', 'get started', 'start here', 'book now', 'book a free'];
+        
+        document.querySelectorAll('a').forEach(a => {
+            const text = a.innerText.toLowerCase().trim();
+            // Match keywords or check if it's inside the Journey (Coaching) section
+            const isJourneyCTA = a.closest('#coaching') && (text.includes('started') || text.includes('here'));
+            const isGeneralCTA = keywords.some(k => text.includes(k));
+
+            if (isGeneralCTA || isJourneyCTA) {
+                if (!a.getAttribute('href').startsWith('#booking')) {
+                    a.setAttribute('href', '#booking');
+                    
+                    // Smooth scroll
+                    a.onclick = (e) => {
+                        e.preventDefault();
+                        bookingSection.scrollIntoView({ behavior: 'smooth' });
+                    };
+                }
+            }
+        });
+    }
+    
+    linkCTAs();
+    setInterval(linkCTAs, 2000);
+})();
 </script>
 
 </body>
